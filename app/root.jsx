@@ -44,7 +44,11 @@ export const links = () => {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {
+      rel: 'icon',
+      type: 'image/svg+xml',
+      href: 'https://static.wixstatic.com/media/3b16c8_c6719774a90a47b4a99eca4cc7443af5~mv2.png/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/3b16c8_c6719774a90a47b4a99eca4cc7443af5~mv2.png',
+    },
   ];
 };
 
