@@ -1,7 +1,7 @@
 
 
 import React, { useState } from "react";
-import { Button } from '~/components';
+import { Button, Text } from '~/components';
 import { Link, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { json } from '@shopify/remix-oxygen';
 import { flattenConnection, Image, Money } from '@shopify/hydrogen'
@@ -14,7 +14,7 @@ export const meta = () => {
   };
 };
 
-export async function loader ({ context: { storefront }, params }) {
+export async function loader({ context: { storefront }, params }) {
   const { query } = params;
   const params_split = query.split("&")
   const query_params = params_split.map((text) => {
@@ -41,9 +41,14 @@ const Index = () => {
   const [products, setProducts] = useState(productsRes.nodes);
   return (
     <>
-      <div className="flex justify-start px-10 "><Button text="back" size="w-32" onClick={() => navigate(-1)} textColor="font-Inter" color="bg-transparent" hover="bg-transparent" /></div>
+      <div onClick={() => navigate(-1)} className="cursor-pointer flex justify-start px-10 absolute mt-10 space-x-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+      </svg>
+        <Text className="text-white " >
+          Back</Text>
+      </div>
 
-      <div className="flex justify-center ">
+      <div className="flex justify-center bg-[#133C4D] ">
         <div className="flex flex-col justify-between items-center py-20 h-[90vh]  md:w-2/3">
           <h1 className="text-6xl font-bold font-Inter">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
           <div className="flex flex-col items-center justify-between w-full h-full pt-10">
@@ -61,16 +66,23 @@ const Index = () => {
             </div>
             <Button
               size="w-1/3"
-              textColor="text-white font-Inter"
-              text="Shuffle"
               onClick={() => {
                 let shuffled = [...shuffleArray(products)];
                 setProducts(shuffled);
               }}
-            />
+            >Shuffle</Button>
           </div>
         </div>
-      </div></>
+      </div>
+      <div onClick={() => navigate("/products")} className="cursor-pointer flex justify-start px-10 absolute bottom-10 right-10 space-x-4">
+        <Text className="text-white " >
+          View All Our Cards</Text>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+</svg>
+
+      </div>
+    </>
   );
 };
 
@@ -83,20 +95,20 @@ const SuggestionsCard = ({ cardInfo }) => {
   const { productTitle, creator } = separateTitleAndCreator(cardInfo.title)
   return (
     <div className="flex flex-col items-center justify-center space-y-4" >
-<Link to={`/products/${cardInfo.handle}`}>
-      {cardInfo.featuredImage.url && (
+      <Link to={`/products/${cardInfo.handle}`}>
+        {cardInfo.featuredImage.url && (
 
-        <Image
-          width={500}
-          height={700}
-          data={cardInfo.featuredImage}
-          className="object-contain object-center rounded w-52 h-72 hover:border"
-          alt={cardInfo.title}
-        />
-      )
-      }
-      <h2 className="text-xl font-bold">{productTitle}</h2>
-      <p>By {creator}</p>
+          <Image
+            width={500}
+            height={700}
+            data={cardInfo.featuredImage}
+            className="object-contain object-center rounded w-52 h-72 hover:border"
+            alt={cardInfo.title}
+          />
+        )
+        }
+        <h2 className="text-xl font-bold">{productTitle}</h2>
+        <p>By {creator}</p>
       </Link>
     </div >
   );
@@ -104,18 +116,18 @@ const SuggestionsCard = ({ cardInfo }) => {
 const SuggestionsCardSmall = ({ cardInfo }) => {
   return (
     <div className="flex items-center justify-center">
-        <Link to={`/products/${cardInfo.handle}`}>
-      {cardInfo.featuredImage.url && (
+      <Link to={`/products/${cardInfo.handle}`}>
+        {cardInfo.featuredImage.url && (
 
-        <Image
-          width={500}
-          height={700}
-          data={cardInfo.featuredImage}
-          className="object-cover object-center w-20 h-32 rounded hover:border"
-          alt={cardInfo.title}
-        />
-      )
-      }
+          <Image
+            width={500}
+            height={700}
+            data={cardInfo.featuredImage}
+            className="object-cover object-center w-20 h-32 rounded hover:border"
+            alt={cardInfo.title}
+          />
+        )
+        }
       </Link>
     </div>
   );
@@ -129,7 +141,7 @@ const separateTitleAndCreator = (title) => {
 }
 
 
-function shuffleArray (array) {
+function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];

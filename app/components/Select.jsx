@@ -27,7 +27,7 @@ export function Select ({
         )}
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full h-10 py-2 pl-3 pr-10 text-left bg-white border rounded-lg shadow-md cursor-default border-amber-300 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">
+            <span className="block truncate text-black">
               {multiselect
                 ? value.map((val) => val[itemName]).join(", ")
                 : value[itemName]}
@@ -55,7 +55,7 @@ export function Select ({
                     }
                     value={item}
                   >
-                    {({ selected }) => {
+                    {({ selected }) => {        
                       return (
                         <>
                           <span
@@ -64,7 +64,7 @@ export function Select ({
                           >
                             {item[itemName]}
                           </span>
-                          {selected || item.id == value.id ? (
+                          { selected ? (
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-300">
                               <FontAwesomeIcon icon={faCheckCircle} />
                             </span>

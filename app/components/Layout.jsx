@@ -152,9 +152,8 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
     <header
       role="banner"
       className={`${
-        isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
-          : 'bg-contrast/80 text-primary'
+   
+        'bg-white text-black'
       } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
@@ -218,18 +217,16 @@ function DesktopHeader({isHome, menu, openCart, title}) {
     <header
       role="banner"
       className={`${
-        isHome
-          ? 'bg-white text-black'
-          : 'bg-contrast/80 text-primary'
+         'bg-white text-black'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
     >
-      <div className="flex gap-14 justify-end w-full bg-yellow-300 ml-12">
+      <div className="flex gap-10 justify-end items-center w-[75%] ml-12">
         <Link className="font-bold" to="/" prefetch="intent">
-          {title}
+        <img className='h-[3.313rem]' src='https://static.wixstatic.com/media/def3ab_f4945e4598c34a98933d400f8ce7e7e8~mv2.png/v1/crop/x_0,y_133,w_640,h_222/fill/w_334,h_106,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Chale_Logos-01%20(2).png'/>
         </Link>
-        <nav className="flex gap-14 uppercase tracking-widest">
+        <nav className="flex gap-10 uppercase tracking-widest">
           {/* Top level menu items */}
           {(menu?.items || []).map((item) => (
             <Link

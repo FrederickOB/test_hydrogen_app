@@ -23,7 +23,7 @@ import {useAnalytics} from './hooks/useAnalytics';
 
 const seo = ({data, pathname}) => ({
   title: data?.layout?.shop?.name,
-  titleTemplate: '%s | Hydrogen Demo Store',
+  titleTemplate: 'Personal CRM for Cards I CHALE',
   description: data?.layout?.shop?.description,
   handle: '@shopify',
   url: `https://hydrogen.shop${pathname}`,
@@ -115,7 +115,7 @@ export function CatchBoundary() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className='bg-white'>
         <Layout
           layout={root?.data?.layout}
           key={`${locale.language}-${locale.country}`}
