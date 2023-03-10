@@ -1,240 +1,135 @@
-import {defer} from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
-import {Await, useLoaderData} from '@remix-run/react';
-import {ProductSwimlane, FeaturedCollections, Hero} from '~/components';
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getHeroPlaceholder} from '~/lib/placeholders';
-import {AnalyticsPageType} from '@shopify/hydrogen';
+import { useState } from "react";
+import { Button, Select } from "~/components";
+import { useLoaderData, useNavigate } from '@remix-run/react';
+import { json } from '@shopify/remix-oxygen';
 
-export async function loader({params, context}) {
-  const {language, country} = context.storefront.i18n;
+export const meta = () => {
+  return {
+    title: 'Hydrogen',
+    description: 'A custom storefront powered by Hydrogen',
+  };
+};
 
-  if (
-    params.lang &&
-    params.lang.toLowerCase() !== `${language}-${country}`.toLowerCase()
-  ) {
-    // If the lang URL param is defined, yet we still are on `EN-US`
-    // the the lang param must be invalid, send to the 404 page
-    throw new Response(null, {status: 404});
-  }
-
-  const {shop, hero} = await context.storefront.query(HOMEPAGE_SEO_QUERY, {
-    variables: {handle: 'freestyle'},
-  });
-
-  return defer({
-    shop,
-    primaryHero: hero,
-    // These different queries are separated to illustrate how 3rd party content
-    // fetching can be optimized for both above and below the fold.
-    featuredProducts: context.storefront.query(
-      HOMEPAGE_FEATURED_PRODUCTS_QUERY,
-      {
-        variables: {
-          /**
-           * Country and language properties are automatically injected
-           * into all queries. Passing them is unnecessary unless you
-           * want to override them from the following default:
-           */
-          country,
-          language,
-        },
-      },
-    ),
-    secondaryHero: context.storefront.query(COLLECTION_HERO_QUERY, {
-      variables: {
-        handle: 'backcountry',
-        country,
-        language,
-      },
-    }),
-    featuredCollections: context.storefront.query(FEATURED_COLLECTIONS_QUERY, {
-      variables: {
-        country,
-        language,
-      },
-    }),
-    tertiaryHero: context.storefront.query(COLLECTION_HERO_QUERY, {
-      variables: {
-        handle: 'winter-2022',
-        country,
-        language,
-      },
-    }),
-    analytics: {
-      pageType: AnalyticsPageType.home,
+export async function loader ({ context: { storefront } }) {
+  const variables = { first: 100 }
+  const { productTags } = await storefront.query(TAGS_QUERY, {
+    variables: {
+      ...variables,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
     },
   });
+  const { productTypes } = await storefront.query(TYPES_QUERY, {
+    variables: {
+      ...variables,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
+    },
+  });
+  return json({ productTags, productTypes })
 }
 
-export default function Homepage() {
-  const {
-    primaryHero,
-    secondaryHero,
-    tertiaryHero,
-    featuredCollections,
-    featuredProducts,
-  } = useLoaderData();
+export default function Index () {
+  const navigate = useNavigate();
+  const { productTags, productTypes } = useLoaderData();
+  const [relationship, setRelationship] = useState("");
+  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState('');
 
-  // TODO: skeletons vs placeholders
-  const skeletons = getHeroPlaceholder([{}, {}, {}]);
-
-  // TODO: analytics
-  // useServerAnalytics({
-  //   shopify: {
-  //     pageType: ShopifyAnalyticsConstants.pageType.home,
-  //   },
-  // });
 
   return (
-    <>
-      {primaryHero && (
-        <Hero {...primaryHero} height="full" top loading="eager" />
-      )}
+    <div className="flex justify-center">
+      <div className="flex flex-col justify-between items-center py-20 h-[90vh]  md:w-2/3">
+        <h1 className="text-6xl font-bold font-Inter">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="grid w-full grid-cols-1 gap-20 p-10 md:grid-cols-3">
+            <div className="">
+              <Select
+                data={[
+                  { id: 1, type: "business" },
+                  { id: 2, type: "personal" },
+                ]}
+                label="relationship type"
+                itemName="type"
+                value={relationship}
+                setValue={(value) => setRelationship(value)}
+              />
+            </div>
+            <div className="">
+              <Select
+                data={productTypes.edges}
+                label="what is the occasion"
+                itemName="node"
+                value={category}
+                setValue={(value) => setCategory(value)}
+              />
+            </div>
+            <div className="">
+              <Select
+                data={productTags.edges}
+                label="who is it for"
+                itemName="node"
+                value={tags}
+                setValue={(value) => setTags(value)}
+              />
+            </div>
+          </div>
 
-      {featuredProducts && (
-        <Suspense>
-          <Await resolve={featuredProducts}>
-            {({products}) => {
-              if (!products?.nodes) return <></>;
-              return (
-                <ProductSwimlane
-                  products={products.nodes}
-                  title="Featured Products"
-                  count={4}
-                />
+          <Button
+            onClick={() => {
+              return navigate(
+                `/products/query/tag:${tags.node}&product_type:${category.node}`,
               );
             }}
-          </Await>
-        </Suspense>
-      )}
-
-      {secondaryHero && (
-        <Suspense fallback={<Hero {...skeletons[1]} />}>
-          <Await resolve={secondaryHero}>
-            {({hero}) => {
-              if (!hero) return <></>;
-              return <Hero {...hero} />;
-            }}
-          </Await>
-        </Suspense>
-      )}
-
-      {featuredCollections && (
-        <Suspense>
-          <Await resolve={featuredCollections}>
-            {({collections}) => {
-              if (!collections?.nodes) return <></>;
-              return (
-                <FeaturedCollections
-                  collections={collections.nodes}
-                  title="Collections"
-                />
-              );
-            }}
-          </Await>
-        </Suspense>
-      )}
-
-      {tertiaryHero && (
-        <Suspense fallback={<Hero {...skeletons[2]} />}>
-          <Await resolve={tertiaryHero}>
-            {({hero}) => {
-              if (!hero) return <></>;
-              return <Hero {...hero} />;
-            }}
-          </Await>
-        </Suspense>
-      )}
-    </>
+            
+            disabled={!category || !relationship || !tags}
+            width = "1/3"
+          >  See Our Recommendations </Button>
+        </div>
+      </div></div>
   );
 }
 
-const COLLECTION_CONTENT_FRAGMENT = `#graphql
-  ${MEDIA_FRAGMENT}
-  fragment CollectionContent on Collection {
-    id
-    handle
-    title
-    descriptionHtml
-    heading: metafield(namespace: "hero", key: "title") {
-      value
+
+
+
+const TAGS_QUERY = `#graphql
+query productTags(
+  $country: CountryCode
+  $language: LanguageCode
+) @inContext(country: $country, language: $language) {
+  productTags(first: 100) {
+    edges {
+      cursor
+      node
     }
-    byline: metafield(namespace: "hero", key: "byline") {
-      value
-    }
-    cta: metafield(namespace: "hero", key: "cta") {
-      value
-    }
-    spread: metafield(namespace: "hero", key: "spread") {
-      reference {
-        ...Media
-      }
-    }
-    spreadSecondary: metafield(namespace: "hero", key: "spread_secondary") {
-      reference {
-        ...Media
-      }
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
     }
   }
+}
+`;
+const TYPES_QUERY = `#graphql
+query productTypes(
+  $country: CountryCode
+  $language: LanguageCode
+) @inContext(country: $country, language: $language) {
+  productTypes(first: 100) {
+    edges {
+      cursor
+      node
+    }
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+  }
+}
 `;
 
-const HOMEPAGE_SEO_QUERY = `#graphql
-  ${COLLECTION_CONTENT_FRAGMENT}
-  query collectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    hero: collection(handle: $handle) {
-      ...CollectionContent
-    }
-    shop {
-      name
-      description
-    }
-  }
-`;
 
-const COLLECTION_HERO_QUERY = `#graphql
-  ${COLLECTION_CONTENT_FRAGMENT}
-  query collectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    hero: collection(handle: $handle) {
-      ...CollectionContent
-    }
-  }
-`;
-
-// @see: https://shopify.dev/api/storefront/latest/queries/products
-export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
-  ${PRODUCT_CARD_FRAGMENT}
-  query homepageFeaturedProducts($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    products(first: 8) {
-      nodes {
-        ...ProductCard
-      }
-    }
-  }
-`;
-
-// @see: https://shopify.dev/api/storefront/latest/queries/collections
-export const FEATURED_COLLECTIONS_QUERY = `#graphql
-  query homepageFeaturedCollections($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    collections(
-      first: 4,
-      sortKey: UPDATED_AT
-    ) {
-      nodes {
-        id
-        title
-        handle
-        image {
-          altText
-          width
-          height
-          url
-        }
-      }
-    }
-  }
-`;

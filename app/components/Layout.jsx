@@ -23,6 +23,8 @@ import {Suspense, useEffect, useMemo} from 'react';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 
+export const menu = {items:[{title:"how it works",to:"https://www.chale.io/#how_it_works",target:""},{title:"cards",to:"https://www.chale.io/#cards",target:""},{title:"features",to:"https://www.chale.io/#features",target:""},{title:"why chale",to:"https://www.chale.io/why",target:""},{title:"contact",to:"https://www.chale.io/contact",target:""}]}
+
 export function Layout({children, layout}) {
   return (
     <>
@@ -34,7 +36,8 @@ export function Layout({children, layout}) {
         </div>
         <Header
           title={layout?.shop.name ?? 'Hydrogen'}
-          menu={layout?.headerMenu}
+          // menu={layout?.headerMenu}
+          menu={menu}
         />
         <main role="main" id="mainContent" className="flex-grow">
           {children}
@@ -216,17 +219,17 @@ function DesktopHeader({isHome, menu, openCart, title}) {
       role="banner"
       className={`${
         isHome
-          ? 'bg-primary/80 dark:bg-contrast/60 text-contrast dark:text-primary shadow-darkHeader'
+          ? 'bg-white text-black'
           : 'bg-contrast/80 text-primary'
       } ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
     >
-      <div className="flex gap-12">
+      <div className="flex gap-14 justify-end w-full bg-yellow-300 ml-12">
         <Link className="font-bold" to="/" prefetch="intent">
           {title}
         </Link>
-        <nav className="flex gap-8">
+        <nav className="flex gap-14 uppercase tracking-widest">
           {/* Top level menu items */}
           {(menu?.items || []).map((item) => (
             <Link
@@ -235,7 +238,7 @@ function DesktopHeader({isHome, menu, openCart, title}) {
               target={item.target}
               prefetch="intent"
               className={({isActive}) =>
-                isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
+                isActive ? 'pb-1 border-b -mb-px' : 'pb-1 px-4'
               }
             >
               {item.title}

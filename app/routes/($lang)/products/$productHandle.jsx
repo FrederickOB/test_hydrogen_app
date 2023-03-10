@@ -1,6 +1,6 @@
-import {useRef, Suspense, useMemo} from 'react';
-import {Disclosure, Listbox} from '@headlessui/react';
-import {defer} from '@shopify/remix-oxygen';
+import { useRef, Suspense, useMemo } from 'react';
+import { Disclosure, Listbox } from '@headlessui/react';
+import { defer } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
   Await,
@@ -26,13 +26,15 @@ import {
   Text,
   Link,
   AddToCartButton,
+  TextArea,
 } from '~/components';
-import {getExcerpt} from '~/lib/utils';
+import { getExcerpt } from '~/lib/utils';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import { MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import { CartLines, CartSummary, CartDiscounts, CartCheckoutActions } from '~/components/Cart';
 
-const seo = ({data}) => {
+const seo = ({ data }) => {
   const media = flattenConnection(data.product.media).find(
     (media) => media.mediaContentType === 'IMAGE',
   );
@@ -54,18 +56,18 @@ export const handle = {
   seo,
 };
 
-export async function loader({params, request, context}) {
-  const {productHandle} = params;
+export async function loader({ params, request, context }) {
+  const { productHandle } = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const searchParams = new URL(request.url).searchParams;
 
   const selectedOptions = [];
   searchParams.forEach((value, name) => {
-    selectedOptions.push({name, value});
+    selectedOptions.push({ name, value });
   });
 
-  const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
+  const { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -75,7 +77,7 @@ export async function loader({params, request, context}) {
   });
 
   if (!product?.id) {
-    throw new Response(null, {status: 404});
+    throw new Response(null, { status: 404 });
   }
 
   const recommended = getRecommendedProducts(context.storefront, product.id);
@@ -105,9 +107,9 @@ export async function loader({params, request, context}) {
 }
 
 export default function Product() {
-  const {product, shop, recommended} = useLoaderData();
-  const {media, title, vendor, descriptionHtml} = product;
-  const {shippingPolicy, refundPolicy} = shop;
+  const { product, shop, recommended } = useLoaderData();
+  const { media, title, vendor, descriptionHtml } = product;
+  const { shippingPolicy, refundPolicy } = shop;
 
   return (
     <>
@@ -129,12 +131,7 @@ export default function Product() {
               </div>
               <ProductForm />
               <div className="grid gap-4 py-4">
-                {descriptionHtml && (
-                  <ProductDetail
-                    title="Product Details"
-                    content={descriptionHtml}
-                  />
-                )}
+
                 {shippingPolicy?.body && (
                   <ProductDetail
                     title="Shipping"
@@ -169,8 +166,8 @@ export default function Product() {
 }
 
 export function ProductForm() {
-  const {product, analytics} = useLoaderData();
-
+  const { product, analytics } = useLoaderData();
+  const { descriptionHtml } = product
   const [currentSearchParams] = useSearchParams();
   const transition = useTransition();
 
@@ -196,7 +193,7 @@ export function ProductForm() {
   const searchParamsWithDefaults = useMemo(() => {
     const clonedParams = new URLSearchParams(searchParams);
 
-    for (const {name, value} of firstVariant.selectedOptions) {
+    for (const { name, value } of firstVariant.selectedOptions) {
       if (!searchParams.has(name)) {
         clonedParams.set(name, value);
       }
@@ -225,13 +222,37 @@ export function ProductForm() {
 
   return (
     <div className="grid gap-10">
+      <Money
+        withoutTrailingZeros
+        data={selectedVariant?.price}
+        as="span"
+        className="font-bold text-3xl"
+      />
+      {isOnSale && (
+        <Money
+          withoutTrailingZeros
+          data={selectedVariant?.compareAtPrice}
+          as="span"
+          className="opacity-50 strike"
+        />
+      )}
       <div className="grid gap-4">
+
         <ProductOptions
           options={product.options}
           searchParamsWithDefaults={searchParamsWithDefaults}
         />
+        {product.descriptionHtml && (
+          <ProductDetail
+            title="Product Details"
+            content={descriptionHtml}
+          />
+        )}
+
+        <TextArea label="Message in Card" className='rounded'/>
         {selectedVariant && (
           <div className="grid items-stretch gap-4">
+           
             <AddToCartButton
               lines={[
                 {
@@ -246,6 +267,7 @@ export function ProductForm() {
                 totalValue: parseFloat(productAnalytics.price),
               }}
             >
+             
               {isOutOfStock ? (
                 <Text>Sold out</Text>
               ) : (
@@ -253,26 +275,23 @@ export function ProductForm() {
                   as="span"
                   className="flex items-center justify-center gap-2"
                 >
-                  <span>Add to Bag</span> <span>·</span>{' '}
-                  <Money
-                    withoutTrailingZeros
-                    data={selectedVariant?.price}
-                    as="span"
-                  />
-                  {isOnSale && (
-                    <Money
-                      withoutTrailingZeros
-                      data={selectedVariant?.compareAtPrice}
-                      as="span"
-                      className="opacity-50 strike"
-                    />
-                  )}
+                  <span>Add to Cart</span> 
+                  
                 </Text>
               )}
             </AddToCartButton>
-            {!isOutOfStock && (
+            {/* <div>
+      <CartLines lines={cart?.lines} layout={layout} />
+      {!isZeroCost && (
+        <CartSummary cost={cart.cost} layout={layout}>
+          <CartDiscounts discountCodes={cart.discountCodes} />
+          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+        </CartSummary>
+      )}
+    </div> */}
+            {/* {!isOutOfStock && (
               <ShopPayButton variantIds={[selectedVariant?.id]} />
-            )}
+            )} */}
           </div>
         )}
       </div>
@@ -280,7 +299,7 @@ export function ProductForm() {
   );
 }
 
-function ProductOptions({options, searchParamsWithDefaults}) {
+function ProductOptions({ options, searchParamsWithDefaults }) {
   const closeRef = useRef(null);
   return (
     <>
@@ -306,7 +325,7 @@ function ProductOptions({options, searchParamsWithDefaults}) {
               {option.values.length > 7 ? (
                 <div className="relative w-full">
                   <Listbox>
-                    {({open}) => (
+                    {({ open }) => (
                       <>
                         <Listbox.Button
                           ref={closeRef}
@@ -333,7 +352,7 @@ function ProductOptions({options, searchParamsWithDefaults}) {
                               key={`option-${option.name}-${value}`}
                               value={value}
                             >
-                              {({active}) => (
+                              {({ active }) => (
                                 <ProductOptionLink
                                   optionName={option.name}
                                   optionValue={value}
@@ -350,10 +369,10 @@ function ProductOptions({options, searchParamsWithDefaults}) {
                                   {value}
                                   {searchParamsWithDefaults.get(option.name) ===
                                     value && (
-                                    <span className="ml-2">
-                                      <IconCheck />
-                                    </span>
-                                  )}
+                                      <span className="ml-2">
+                                        <IconCheck />
+                                      </span>
+                                    )}
                                 </ProductOptionLink>
                               )}
                             </Listbox.Option>
@@ -400,7 +419,7 @@ function ProductOptionLink({
   children,
   ...props
 }) {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const isLangPathname = /\/[a-zA-Z]{2}-[a-zA-Z]{2}\//g.test(pathname);
   // fixes internalized pathname
   const path = isLangPathname
@@ -423,10 +442,10 @@ function ProductOptionLink({
   );
 }
 
-function ProductDetail({title, content, learnMore}) {
+function ProductDetail({ title, content, learnMore }) {
   return (
-    <Disclosure key={title} as="div" className="grid w-full gap-2">
-      {({open}) => (
+    <Disclosure defaultOpen={true} key={title} as="div" className="grid w-full gap-2">
+      {({ open }) => (
         <>
           <Disclosure.Button className="text-left">
             <div className="flex justify-between">
@@ -445,7 +464,7 @@ function ProductDetail({title, content, learnMore}) {
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
               className="prose dark:prose-invert"
-              dangerouslySetInnerHTML={{__html: content}}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
             {learnMore && (
               <div className="">
@@ -573,7 +592,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
 
 async function getRecommendedProducts(storefront, productId) {
   const products = await storefront.query(RECOMMENDED_PRODUCTS_QUERY, {
-    variables: {productId, count: 12},
+    variables: { productId, count: 12 },
   });
 
   invariant(products, 'No data returned from Shopify API');

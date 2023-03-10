@@ -2,6 +2,7 @@ export {Layout} from './Layout';
 export {Drawer, useDrawer} from './Drawer';
 export {Heading, Section, Text, PageHeader} from './Text';
 export {Input} from './Input';
+export {TextArea} from './TextArea';
 export {ProductGallery} from './ProductGallery';
 export {ProductCard} from './ProductCard';
 export {ProductSwimlane} from './ProductSwimlane';
@@ -23,5 +24,6 @@ export {Grid} from './Grid';
 export {FeaturedProducts} from './FeaturedProducts';
 export {Pagination, getPaginationVariables, usePagination} from './Pagination';
 export {AddToCartButton} from './AddToCartButton';
+export {Select} from './Select';
 // Sue me
 export * from './Icon';

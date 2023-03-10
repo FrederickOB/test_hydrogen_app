@@ -52,7 +52,7 @@ export function CartDetails({layout, cart}) {
  * @param discountCodes the current discount codes applied to the cart
  * @todo rework when a design is ready
  */
-function CartDiscounts({discountCodes}) {
+export function CartDiscounts({discountCodes}) {
   const codes = discountCodes?.map(({code}) => code).join(', ') || null;
 
   return (
@@ -112,7 +112,7 @@ function UpdateDiscountForm({children}) {
   );
 }
 
-function CartLines({layout = 'drawer', lines: cartLines}) {
+export function CartLines({layout = 'drawer', lines: cartLines}) {
   const currentLines = cartLines ? flattenConnection(cartLines) : [];
   const scrollRef = useRef(null);
   const {y} = useScroll(scrollRef);
@@ -139,7 +139,7 @@ function CartLines({layout = 'drawer', lines: cartLines}) {
   );
 }
 
-function CartCheckoutActions({checkoutUrl}) {
+export function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
@@ -154,7 +154,7 @@ function CartCheckoutActions({checkoutUrl}) {
   );
 }
 
-function CartSummary({cost, layout, children = null}) {
+export function CartSummary({cost, layout, children = null}) {
   const summary = {
     drawer: 'grid gap-4 p-6 border-t md:px-12',
     page: 'sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-primary/5 rounded w-full',
