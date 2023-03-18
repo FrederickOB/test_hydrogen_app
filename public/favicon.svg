@@ -6,7 +6,7 @@
     .fill {
       fill: #000;
     }
-    @media (prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: light) {
       .stroke {
         stroke: #fff;
       }

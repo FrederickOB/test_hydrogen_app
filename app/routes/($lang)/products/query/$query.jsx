@@ -70,11 +70,14 @@ const Index = () => {
                 let shuffled = [...shuffleArray(products)];
                 setProducts(shuffled);
               }}
-            >Shuffle</Button>
+            >Other Options</Button>
           </div>
         </div>
       </div>
-      <div onClick={() => navigate("/products")} className="cursor-pointer flex justify-start px-10 absolute bottom-10 right-10 space-x-4">
+      <div
+        onClick={() => navigate('/products')}
+        className="cursor-pointer flex justify-start px-10 absolute bottom-10 right-10 space-x-4"
+      >
         <Text className="text-white " >
           View All Our Cards</Text>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

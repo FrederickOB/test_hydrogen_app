@@ -23,7 +23,20 @@ import {Suspense, useEffect, useMemo} from 'react';
 import {useIsHydrated} from '~/hooks/useIsHydrated';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 
-export const menu = {items:[{title:"how it works",to:"https://www.chale.io/#how_it_works",target:""},{title:"cards",to:"https://www.chale.io/#cards",target:""},{title:"features",to:"https://www.chale.io/#features",target:""},{title:"why chale",to:"https://www.chale.io/why",target:""},{title:"contact",to:"https://www.chale.io/contact",target:""}]}
+export const menu = {
+  items: [
+    {
+      title: 'how it works',
+      to: 'https://www.chale.io/#how_it_works',
+      target: '',
+    },
+    {title: 'cards', to: 'https://www.chale.io/#cards', target: ''},
+    {title: 'features', to: 'https://www.chale.io/#features', target: ''},
+    {title: 'why chale', to: 'https://www.chale.io/why', target: ''},
+    {title: 'products', to: '/products', target: ''},
+    {title: 'contact', to: 'https://www.chale.io/contact', target: ''},
+  ],
+};
 
 export function Layout({children, layout}) {
   return (
@@ -63,13 +76,13 @@ function Header({title, menu}) {
     closeDrawer: closeMenu,
   } = useDrawer();
 
-  const addToCartFetchers = useCartFetchers('ADD_TO_CART');
+  // const addToCartFetchers = useCartFetchers('ADD_TO_CART');
 
   // toggle cart drawer when adding to cart
-  useEffect(() => {
-    if (isCartOpen || !addToCartFetchers.length) return;
-    openCart();
-  }, [addToCartFetchers, isCartOpen, openCart]);
+  // useEffect(() => {
+  //   if (isCartOpen || !addToCartFetchers.length) return;
+  //   openCart();
+  // }, [addToCartFetchers, isCartOpen, openCart]);
 
   return (
     <>
@@ -151,10 +164,7 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
   return (
     <header
       role="banner"
-      className={`${
-   
-        'bg-white text-black'
-      } flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
+      className={`${'bg-white text-black'} flex lg:hidden items-center h-nav sticky backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-4 px-4 md:px-8`}
     >
       <div className="flex items-center justify-start w-full gap-4">
         <button
@@ -216,15 +226,17 @@ function DesktopHeader({isHome, menu, openCart, title}) {
   return (
     <header
       role="banner"
-      className={`${
-         'bg-white text-black'
-      } ${
+      className={`${'bg-white text-black'} ${
         !isHome && y > 50 && ' shadow-lightHeader'
       } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
     >
       <div className="flex gap-10 justify-end items-center w-[75%] ml-12">
         <Link className="font-bold" to="/" prefetch="intent">
-        <img className='h-[3.313rem]' src='https://static.wixstatic.com/media/def3ab_f4945e4598c34a98933d400f8ce7e7e8~mv2.png/v1/crop/x_0,y_133,w_640,h_222/fill/w_334,h_106,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Chale_Logos-01%20(2).png'/>
+          <img
+            alt="logo"
+            className="h-[3.313rem]"
+            src="https://static.wixstatic.com/media/def3ab_f4945e4598c34a98933d400f8ce7e7e8~mv2.png/v1/crop/x_0,y_133,w_640,h_222/fill/w_334,h_106,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Chale_Logos-01%20(2).png"
+          />
         </Link>
         <nav className="flex gap-10 uppercase tracking-widest">
           {/* Top level menu items */}

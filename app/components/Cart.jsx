@@ -80,7 +80,7 @@ export function CartDiscounts({discountCodes}) {
         <div
           className={clsx(
             codes ? 'hidden' : 'flex',
-            'items-center gap-4 justify-between text-copy',
+            'items-center gap-4 justify-between text-copy  relative',
           )}
         >
           <input
@@ -89,8 +89,8 @@ export function CartDiscounts({discountCodes}) {
             name="discountCode"
             placeholder="Discount code"
           />
-          <button className="flex justify-end font-medium whitespace-nowrap w-5">
-            Apply Discount
+          <button className="absolute right-2 flex justify-end font-medium whitespace-nowrap w-5 ">
+            Apply 
           </button>
         </div>
       </UpdateDiscountForm>

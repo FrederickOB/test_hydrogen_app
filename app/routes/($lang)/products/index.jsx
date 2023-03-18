@@ -40,8 +40,8 @@ export default function AllProducts() {
 
   return (
     <>
-      <PageHeader heading="All Products" variant="allCollections" />
-      <Section>
+      <PageHeader heading="All Products" variant="allCollections" className="bg-[#133C4D] text-5xl" />
+      <Section className="bg-[#133C4D]">
         <Pagination connection={products}>
           {({
             endCursor,

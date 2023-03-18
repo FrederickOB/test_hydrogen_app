@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "~react-image-gallery/styles/css/image-gallery.css"
+
 /* Tokens */
 :root {
   --color-primary: 20 20 20; /* Text, buttons, etc. */
@@ -132,7 +134,7 @@ shop-pay-button {
   }
 
   .swimlane {
-    @apply grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-4 overflow-x-scroll px-6 pb-4;
+    @apply grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-2 overflow-x-scroll px-6 pb-2;
   }
 }
 
@@ -176,7 +178,7 @@ shop-pay-button {
       @apply absolute top-0 left-0 z-10 block h-full w-full rounded shadow-border;
     }
     img {
-      @apply aspect-[inherit] w-full object-cover;
+      @apply aspect-[inherit] w-full object-contain;
     }
   }
 }
