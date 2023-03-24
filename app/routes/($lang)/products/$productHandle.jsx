@@ -1,6 +1,6 @@
-import {useRef, Suspense, useMemo, useState} from 'react';
-import {Disclosure, Listbox, Tab} from '@headlessui/react';
-import {defer} from '@shopify/remix-oxygen';
+import { useRef, Suspense, useMemo, useState } from 'react';
+import { Disclosure, Listbox, Tab } from '@headlessui/react';
+import { defer } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
   Await,
@@ -31,10 +31,10 @@ import {
   PageHeader,
   CartLoading,
 } from '~/components';
-import {getExcerpt} from '~/lib/utils';
+import { getExcerpt } from '~/lib/utils';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import { MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
 import {
   CartLines,
   CartSummary,
@@ -43,7 +43,7 @@ import {
   CartDetails,
 } from '~/components/Cart';
 
-const seo = ({data}) => {
+const seo = ({ data }) => {
   const media = flattenConnection(data.product.media).find(
     (media) => media.mediaContentType === 'IMAGE',
   );
@@ -65,18 +65,18 @@ export const handle = {
   seo,
 };
 
-export async function loader({params, request, context}) {
-  const {productHandle} = params;
+export async function loader ({ params, request, context }) {
+  const { productHandle } = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const searchParams = new URL(request.url).searchParams;
 
   const selectedOptions = [];
   searchParams.forEach((value, name) => {
-    selectedOptions.push({name, value});
+    selectedOptions.push({ name, value });
   });
 
-  const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
+  const { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -86,7 +86,7 @@ export async function loader({params, request, context}) {
   });
 
   if (!product?.id) {
-    throw new Response(null, {status: 404});
+    throw new Response(null, { status: 404 });
   }
 
   const recommended = getRecommendedProducts(context.storefront, product.id);
@@ -115,21 +115,21 @@ export async function loader({params, request, context}) {
   });
 }
 
-export default function Product() {
+export default function Product () {
   const [root] = useMatches();
-  const {product, shop, recommended} = useLoaderData();
-  const {media, title, vendor, descriptionHtml} = product;
-  const {shippingPolicy, refundPolicy} = shop;
+  const { product, shop, recommended } = useLoaderData();
+  const { media, title, vendor, descriptionHtml } = product;
+  const { shippingPolicy, refundPolicy } = shop;
 
   return (
     <>
       <PageHeader
-        heading=""
+        heading="Purchase Card"
         variant="allCollections"
-        className="bg-[#133C4D]"
+        className="bg-[#133C4D] text-white "
       />
-      <Section padding="x" className="px-0 bg-[#133C4D] ">
-        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3">
+      <Section padding="x" className="px-0 bg-[#133C4D] pt-6">
+        <div className="grid items-start md:gap-6 lg:gap-20 md:grid-cols-2 lg:grid-cols-3 ">
           <ProductGallery media={media.nodes} className="w-fit " />
           <div className="sticky md:-mb-nav md:top-nav md:-translate-y-nav md:h-screen md:pt-nav hiddenScroll md:overflow-y-scroll">
             <section className="flex flex-col w-full max-w-xl gap-8 p-6 md:mx-auto md:max-w-sm md:px-0 lg:border-2 lg:border-white lg:rounded-md">
@@ -138,14 +138,14 @@ export default function Product() {
                   return product &&
                     cart &&
                     product.id ===
-                      cart?.lines?.edges[0]?.node?.merchandise?.product?.id ? (
-                    <CartDetails cart={cart} layout="drawer" />
+                    cart?.lines?.edges[0]?.node?.merchandise?.product?.id ? (
+                    <CartDetails cart={cart} layout="inPage" />
                   ) : (
-                    <div className="lg:px-12 lg:py-4">
+                    <div className="lg:px-12 lg:py-4 text-white">
                       <div className="grid gap-2 mb-6">
                         <Heading
                           as="h1"
-                          className="whitespace-normal text-2xl lg:text-5xl"
+                          className="whitespace-normal text-2xl lg:text-5xl text-white"
                         >
                           {title}
                         </Heading>
@@ -194,8 +194,8 @@ export default function Product() {
   );
 }
 
-export function ProductForm() {
-  const {product, analytics} = useLoaderData();
+export function ProductForm () {
+  const { product, analytics } = useLoaderData();
   // const {descriptionHtml} = product;
   const [currentSearchParams] = useSearchParams();
   const transition = useTransition();
@@ -222,7 +222,7 @@ export function ProductForm() {
   const searchParamsWithDefaults = useMemo(() => {
     const clonedParams = new URLSearchParams(searchParams);
 
-    for (const {name, value} of firstVariant.selectedOptions) {
+    for (const { name, value } of firstVariant.selectedOptions) {
       if (!searchParams.has(name)) {
         clonedParams.set(name, value);
       }
@@ -300,7 +300,7 @@ export function ProductForm() {
               ) : (
                 <Text
                   as="span"
-                  className="flex items-center justify-center gap-2"
+                  className="flex items-center justify-center gap-2 text-black"
                 >
                   <span>Add to Cart</span>
                 </Text>
@@ -324,7 +324,7 @@ export function ProductForm() {
   );
 }
 
-function ProductOptions({options, searchParamsWithDefaults}) {
+function ProductOptions ({ options, searchParamsWithDefaults }) {
   console.log(options);
   const closeRef = useRef(null);
   return (
@@ -351,7 +351,7 @@ function ProductOptions({options, searchParamsWithDefaults}) {
               {option.values.length > 7 ? (
                 <div className="relative w-full">
                   <Listbox>
-                    {({open}) => (
+                    {({ open }) => (
                       <>
                         <Listbox.Button
                           ref={closeRef}
@@ -378,7 +378,7 @@ function ProductOptions({options, searchParamsWithDefaults}) {
                               key={`option-${option.name}-${value}`}
                               value={value}
                             >
-                              {({active}) => (
+                              {({ active }) => (
                                 <ProductOptionLink
                                   optionName={option.name}
                                   optionValue={value}
@@ -394,17 +394,17 @@ function ProductOptions({options, searchParamsWithDefaults}) {
                                 >
                                   <div
                                     className="w-3 h-3 border-1"
-                                    style={{backgroundColor: value}}
+                                    style={{ backgroundColor: value }}
                                   >
                                     1
                                   </div>
                                   {/* {value} */}
                                   {searchParamsWithDefaults.get(option.name) ===
                                     value && (
-                                    <span className="ml-2">
-                                      <IconCheck />
-                                    </span>
-                                  )}
+                                      <span className="ml-2">
+                                        <IconCheck />
+                                      </span>
+                                    )}
                                 </ProductOptionLink>
                               )}
                             </Listbox.Option>
@@ -456,14 +456,14 @@ function ProductOptions({options, searchParamsWithDefaults}) {
 //   );
 // }
 
-function ProductOptionLink({
+function ProductOptionLink ({
   optionName,
   optionValue,
   searchParams,
   children,
   ...props
 }) {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const isLangPathname = /\/[a-zA-Z]{2}-[a-zA-Z]{2}\//g.test(pathname);
   // fixes internalized pathname
   const path = isLangPathname
@@ -486,7 +486,7 @@ function ProductOptionLink({
   );
 }
 
-function ProductDetail({title, content, learnMore}) {
+function ProductDetail ({ title, content, learnMore }) {
   return (
     <Disclosure
       defaultOpen={true}
@@ -494,7 +494,7 @@ function ProductDetail({title, content, learnMore}) {
       as="div"
       className="grid w-full gap-2"
     >
-      {({open}) => (
+      {({ open }) => (
         <>
           <Disclosure.Button className="text-left">
             <div className="flex justify-between">
@@ -513,7 +513,7 @@ function ProductDetail({title, content, learnMore}) {
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
               className="prose dark:prose-invert"
-              dangerouslySetInnerHTML={{__html: content}}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
             {learnMore && (
               <div className="">
@@ -639,9 +639,9 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
 `;
 
-async function getRecommendedProducts(storefront, productId) {
+async function getRecommendedProducts (storefront, productId) {
   const products = await storefront.query(RECOMMENDED_PRODUCTS_QUERY, {
-    variables: {productId, count: 12},
+    variables: { productId, count: 12 },
   });
 
   invariant(products, 'No data returned from Shopify API');

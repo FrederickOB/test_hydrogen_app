@@ -1,4 +1,4 @@
-import {useLoaderData} from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {
   PageHeader,
@@ -9,12 +9,12 @@ import {
   getPaginationVariables,
   Button,
 } from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority} from '~/lib/const';
+import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import { getImageLoadingPriority } from '~/lib/const';
 
 const PAGE_BY = 8;
 
-export async function loader({request, context: {storefront}}) {
+export async function loader ({ request, context: { storefront } }) {
   const variables = getPaginationVariables(request, PAGE_BY);
 
   const data = await storefront.query(ALL_PRODUCTS_QUERY, {
@@ -35,13 +35,13 @@ export const handle = {
     title: 'Products',
   },
 };
-export default function AllProducts() {
+export default function AllProducts () {
   const products = useLoaderData();
 
   return (
     <>
-      <PageHeader heading="All Products" variant="allCollections" className="bg-[#133C4D] text-5xl" />
-      <Section className="bg-[#133C4D]">
+      <PageHeader heading="All Products" variant="allCollections" className="bg-[#133C4D] text-white" />
+      <Section className="bg-[#133C4D] text-white px-10">
         <Pagination connection={products}>
           {({
             endCursor,

@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import {flattenConnection, Image, Money, useMoney} from '@shopify/hydrogen';
-import {Text, Link, AddToCartButton} from '~/components';
-import {isDiscounted, isNewArrival} from '~/lib/utils';
-import {getProductPlaceholder} from '~/lib/placeholders';
+import { flattenConnection, Image, Money, useMoney } from '@shopify/hydrogen';
+import { Text, Link, AddToCartButton } from '~/components';
+import { isDiscounted, isNewArrival } from '~/lib/utils';
+import { getProductPlaceholder } from '~/lib/placeholders';
 
-export function ProductCard({
+export function ProductCard ({
   product,
   label,
   className,
@@ -20,7 +20,7 @@ export function ProductCard({
   const firstVariant = flattenConnection(cardProduct.variants)[0];
 
   if (!firstVariant) return null;
-  const {image, price, compareAtPrice} = firstVariant;
+  const { image, price, compareAtPrice } = firstVariant;
 
   if (label) {
     cardLabel = label;
@@ -49,7 +49,7 @@ export function ProductCard({
       >
         <div className={clsx('grid gap-4', className)}>
           {/* <div className="card-image aspect-[4/5] bg-primary/5"> */}
-          <div className="aspect-[4/5] bg-primary/5">
+          <div className="aspect-[4/5] bg-primary/5 text-white">
             {image && (
               <Image
                 className="aspect-[4/5] w-full object-cover fadeIn"
@@ -119,8 +119,8 @@ export function ProductCard({
   );
 }
 
-function CompareAtPrice({data, className}) {
-  const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
+function CompareAtPrice ({ data, className }) {
+  const { currencyNarrowSymbol, withoutTrailingZerosAndCurrency } =
     useMoney(data);
 
   const styles = clsx('strike', className);

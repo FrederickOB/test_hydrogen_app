@@ -1,4 +1,4 @@
-import {useIsHomePath} from '~/lib/utils';
+import { useIsHomePath } from '~/lib/utils';
 import {
   Drawer,
   useDrawer,
@@ -16,29 +16,30 @@ import {
   CartLoading,
   Link,
 } from '~/components';
-import {useParams, Form, Await, useMatches} from '@remix-run/react';
-import {useWindowScroll} from 'react-use';
-import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
-import {useCartFetchers} from '~/hooks/useCartFetchers';
+import { useParams, Form, Await, useMatches } from '@remix-run/react';
+import { useWindowScroll } from 'react-use';
+import { Disclosure } from '@headlessui/react';
+import { Suspense, useEffect, useMemo } from 'react';
+import { useIsHydrated } from '~/hooks/useIsHydrated';
+import { useCartFetchers } from '~/hooks/useCartFetchers';
 
 export const menu = {
   items: [
     {
+      id: 1,
       title: 'how it works',
       to: 'https://www.chale.io/#how_it_works',
       target: '',
     },
-    {title: 'cards', to: 'https://www.chale.io/#cards', target: ''},
-    {title: 'features', to: 'https://www.chale.io/#features', target: ''},
-    {title: 'why chale', to: 'https://www.chale.io/why', target: ''},
-    {title: 'products', to: '/products', target: ''},
-    {title: 'contact', to: 'https://www.chale.io/contact', target: ''},
+    { id: 2, title: 'cards', to: 'https://www.chale.io/#cards', target: '' },
+    { id: 3, title: 'features', to: 'https://www.chale.io/#features', target: '' },
+    { id: 4, title: 'why chale', to: 'https://www.chale.io/why', target: '' },
+    { id: 5, title: 'products', to: '/products', target: '' },
+    { id: 6, title: 'contact', to: 'https://www.chale.io/contact', target: '' },
   ],
 };
 
-export function Layout({children, layout}) {
+export function Layout ({ children, layout }) {
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -61,7 +62,7 @@ export function Layout({children, layout}) {
   );
 }
 
-function Header({title, menu}) {
+function Header ({ title, menu }) {
   const isHome = useIsHomePath();
 
   const {
@@ -106,7 +107,7 @@ function Header({title, menu}) {
   );
 }
 
-function CartDrawer({isOpen, onClose}) {
+function CartDrawer ({ isOpen, onClose }) {
   const [root] = useMatches();
 
   return (
@@ -122,7 +123,7 @@ function CartDrawer({isOpen, onClose}) {
   );
 }
 
-export function MenuDrawer({isOpen, onClose, menu}) {
+export function MenuDrawer ({ isOpen, onClose, menu }) {
   return (
     <Drawer open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
       <div className="grid">
@@ -132,7 +133,7 @@ export function MenuDrawer({isOpen, onClose, menu}) {
   );
 }
 
-function MenuMobileNav({menu, onClose}) {
+function MenuMobileNav ({ menu, onClose }) {
   return (
     <nav className="grid gap-4 p-6 sm:gap-6 sm:px-12 sm:py-8">
       {/* Top level menu items */}
@@ -142,7 +143,7 @@ function MenuMobileNav({menu, onClose}) {
             to={item.to}
             target={item.target}
             onClick={onClose}
-            className={({isActive}) =>
+            className={({ isActive }) =>
               isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
             }
           >
@@ -156,7 +157,7 @@ function MenuMobileNav({menu, onClose}) {
   );
 }
 
-function MobileHeader({title, isHome, openCart, openMenu}) {
+function MobileHeader ({ title, isHome, openCart, openMenu }) {
   // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
 
   const params = useParams();
@@ -220,15 +221,14 @@ function MobileHeader({title, isHome, openCart, openMenu}) {
   );
 }
 
-function DesktopHeader({isHome, menu, openCart, title}) {
+function DesktopHeader ({ isHome, menu, openCart, title }) {
   const params = useParams();
-  const {y} = useWindowScroll();
+  const { y } = useWindowScroll();
   return (
     <header
       role="banner"
-      className={`${'bg-white text-black'} ${
-        !isHome && y > 50 && ' shadow-lightHeader'
-      } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
+      className={`${'bg-white text-black'} ${!isHome && y > 50 && ' shadow-lightHeader'
+        } hidden h-nav lg:flex items-center sticky transition duration-300 backdrop-blur-lg z-40 top-0 justify-between w-full leading-none gap-8 px-12 py-8`}
     >
       <div className="flex gap-10 justify-end items-center w-[75%] ml-12">
         <Link className="font-bold" to="/" prefetch="intent">
@@ -246,7 +246,7 @@ function DesktopHeader({isHome, menu, openCart, title}) {
               to={item.to}
               target={item.target}
               prefetch="intent"
-              className={({isActive}) =>
+              className={({ isActive }) =>
                 isActive ? 'pb-1 border-b -mb-px' : 'pb-1 px-4'
               }
             >
@@ -291,7 +291,7 @@ function DesktopHeader({isHome, menu, openCart, title}) {
   );
 }
 
-function CartCount({isHome, openCart}) {
+function CartCount ({ isHome, openCart }) {
   const [root] = useMatches();
 
   return (
@@ -309,7 +309,7 @@ function CartCount({isHome, openCart}) {
   );
 }
 
-function Badge({openCart, dark, count}) {
+function Badge ({ openCart, dark, count }) {
   const isHydrated = useIsHydrated();
 
   const BadgeCounter = useMemo(
@@ -317,11 +317,10 @@ function Badge({openCart, dark, count}) {
       <>
         <IconBag />
         <div
-          className={`${
-            dark
-              ? 'text-primary bg-contrast dark:text-contrast dark:bg-primary'
-              : 'text-contrast bg-primary'
-          } absolute bottom-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px`}
+          className={`${dark
+            ? 'text-primary bg-contrast dark:text-contrast dark:bg-primary'
+            : 'text-contrast bg-primary'
+            } absolute bottom-1 right-1 text-[0.625rem] font-medium subpixel-antialiased h-3 min-w-[0.75rem] flex items-center justify-center leading-none text-center rounded-full w-auto px-[0.125rem] pb-px`}
         >
           <span>{count || 0}</span>
         </div>
@@ -347,7 +346,7 @@ function Badge({openCart, dark, count}) {
   );
 }
 
-function Footer({menu}) {
+function Footer ({ menu }) {
   const isHome = useIsHomePath();
   const itemsCount = menu
     ? menu?.items?.length + 1 > 4
@@ -360,22 +359,22 @@ function Footer({menu}) {
       divider={isHome ? 'none' : 'top'}
       as="footer"
       role="contentinfo"
-      className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
-        bg-primary dark:bg-contrast dark:text-primary text-contrast overflow-hidden`}
+      className={`grid min-h-[20vh] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount}
+        bg-primary  text-contrast overflow-hidden`}
     >
-      <FooterMenu menu={menu} />
+      {/* <FooterMenu menu={menu} /> */}
       <CountrySelector />
-      <div
+      {/* <div
         className={`self-end pt-8 opacity-50 md:col-span-2 lg:col-span-${itemsCount}`}
       >
         &copy; {new Date().getFullYear()} / Shopify, Inc. Hydrogen is an MIT
         Licensed Open Source project.
-      </div>
+      </div> */}
     </Section>
   );
 }
 
-const FooterLink = ({item}) => {
+const FooterLink = ({ item }) => {
   if (item.to.startsWith('http')) {
     return (
       <a href={item.to} target={item.target} rel="noopener noreferrer">
@@ -391,7 +390,7 @@ const FooterLink = ({item}) => {
   );
 };
 
-function FooterMenu({menu}) {
+function FooterMenu ({ menu }) {
   const styles = {
     section: 'grid gap-4',
     nav: 'grid gap-2 pb-6',
@@ -402,7 +401,7 @@ function FooterMenu({menu}) {
       {(menu?.items || []).map((item) => (
         <section key={item.id} className={styles.section}>
           <Disclosure>
-            {({open}) => (
+            {({ open }) => (
               <>
                 <Disclosure.Button className="text-left md:cursor-default">
                   <Heading className="flex justify-between" size="lead" as="h3">
@@ -416,9 +415,8 @@ function FooterMenu({menu}) {
                 </Disclosure.Button>
                 {item?.items?.length > 0 ? (
                   <div
-                    className={`${
-                      open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
-                    } overflow-hidden transition-all duration-300`}
+                    className={`${open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
+                      } overflow-hidden transition-all duration-300`}
                   >
                     <Suspense data-comment="This suspense fixes a hydration bug in Disclosure.Panel with static prop">
                       <Disclosure.Panel static>

@@ -1,17 +1,17 @@
-import {useFetcher, useLocation, useMatches} from '@remix-run/react';
-import {Heading, Button, IconCheck} from '~/components';
-import {useCallback, useEffect, useRef} from 'react';
-import {useInView} from 'react-intersection-observer';
-import {CartAction} from '~/lib/type';
-import {DEFAULT_LOCALE} from '~/lib/utils';
+import { useFetcher, useLocation, useMatches } from '@remix-run/react';
+import { Heading, Button, IconCheck } from '~/components';
+import { useCallback, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { CartAction } from '~/lib/type';
+import { DEFAULT_LOCALE } from '~/lib/utils';
 import clsx from 'clsx';
 
-export function CountrySelector() {
+export function CountrySelector () {
   const [root] = useMatches();
   const fetcher = useFetcher();
   const closeRef = useRef(null);
   const selectedLocale = root.data?.selectedLocale ?? DEFAULT_LOCALE;
-  const {pathname, search} = useLocation();
+  const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
     '',
@@ -23,7 +23,7 @@ export function CountrySelector() {
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : '';
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });
@@ -54,13 +54,13 @@ export function CountrySelector() {
       </Heading>
       <div className="relative">
         <details
-          className="absolute w-full border rounded border-contrast/30 dark:border-white open:round-b-none overflow-clip"
+          className="absolute w-full border rounded border-contrast/30  open:round-b-none overflow-clip"
           ref={closeRef}
         >
           <summary className="flex items-center justify-between w-full px-4 py-3 cursor-pointer">
             {selectedLocale.label}
           </summary>
-          <div className="w-full overflow-auto border-t border-contrast/30 dark:border-white bg-contrast/30 max-h-36">
+          <div className="w-full overflow-auto border-t border-contrast/30  bg-contrast/30 max-h-36">
             {countries &&
               Object.keys(countries).map((countryPath) => {
                 const countryLocale = countries[countryPath];
@@ -91,7 +91,7 @@ export function CountrySelector() {
   );
 }
 
-function Country({closeDropdown, countryLocale, countryUrlPath, isSelected}) {
+function Country ({ closeDropdown, countryLocale, countryUrlPath, isSelected }) {
   return (
     <ChangeLocaleForm
       key={countryLocale.country}
@@ -103,7 +103,7 @@ function Country({closeDropdown, countryLocale, countryUrlPath, isSelected}) {
       <Button
         className={clsx([
           'text-contrast dark:text-primary',
-          'bg-primary dark:bg-contrast w-full p-2 transition rounded flex justify-start',
+          'bg-primary  w-full p-2 transition rounded flex justify-start',
           'items-center text-left cursor-pointer py-2 px-4',
         ])}
         type="submit"
@@ -121,7 +121,7 @@ function Country({closeDropdown, countryLocale, countryUrlPath, isSelected}) {
   );
 }
 
-function ChangeLocaleForm({children, buyerIdentity, redirectTo}) {
+function ChangeLocaleForm ({ children, buyerIdentity, redirectTo }) {
   const fetcher = useFetcher();
 
   return (
@@ -142,7 +142,7 @@ function ChangeLocaleForm({children, buyerIdentity, redirectTo}) {
   );
 }
 
-function getCountryUrlPath({
+function getCountryUrlPath ({
   countryLocale,
   defaultLocalePrefix,
   pathWithoutLocale,

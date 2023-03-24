@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Select } from "~/components";
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { json } from '@shopify/remix-oxygen';
+import { cardRelationship } from '~/lib/data'
 
 export const meta = () => {
   return {
@@ -33,19 +34,18 @@ export default function Index () {
   const navigate = useNavigate();
   const { productTags, productTypes } = useLoaderData();
   const [relationshipData, setRelationshipData] = useState([
-    {  type: "business" },
-    {  type: "personal" },
+    { type: "business" },
+    { type: "personal" },
   ]);
   const [relationship, setRelationship] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState('');
 
-
   return (
-    <div className="flex justify-center bg-[#133C4D]">
-      <div className="flex flex-col justify-between items-center py-20 h-[90vh]  md:w-2/3">
-        <h1 className="text-6xl font-bold font-Inter">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
-        <div className="flex flex-col items-center justify- py-20 w-full h-[80%]">
+    <div className="flex justify-center bg-[#133C4D] ">
+      <div className="flex flex-col justify-between items-center py-20 h-full md:h-[90vh]  md:w-2/3">
+        <h1 className="md:text-6xl text-4xl font-bold font-Inter px-10 text-white">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
+        <div className="flex flex-col items-center justify- py-10 md:py-20 w-full h-[80%] text-white">
           <div className="grid w-full grid-cols-1 gap-20 p-10 md:grid-cols-3">
             <div className="">
               <Select
@@ -67,9 +67,9 @@ export default function Index () {
             </div>
             <div className="">
               <Select
-                data={productTags.edges}
+                data={cardRelationship[relationship.type]}
                 label="who is it for"
-                itemName="node"
+                itemName="name"
                 value={tags}
                 setValue={(value) => setTags(value)}
               />
@@ -77,16 +77,16 @@ export default function Index () {
           </div>
 
         </div>
-          <Button
-            onClick={() => {
-              return navigate(
-                `/products/query/tag:${tags.node}&product_type:${category.node}`,
-              );
-            }}
-            
-            disabled={!category || !relationship || !tags}
-            width = "1/3"
-          >  See Our Recommendations </Button>
+        <Button
+          onClick={() => {
+            return navigate(
+              `/products/query/tag:${tags.node}&product_type:${category.node}`,
+            );
+          }}
+
+          disabled={!category || !relationship || !tags}
+          width="1/3"
+        >  See Our Recommendations </Button>
       </div></div>
   );
 }

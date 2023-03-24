@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import {missingClass, formatText} from '~/lib/utils';
+import { missingClass, formatText } from '~/lib/utils';
 
-export function Text({
+export function Text ({
   as: Component = 'span',
   className,
   color = 'default',
@@ -47,7 +47,7 @@ export function Text({
   );
 }
 
-export function Heading({
+export function Heading ({
   as: Component = 'h2',
   children,
   className = '',
@@ -83,7 +83,7 @@ export function Heading({
   );
 }
 
-export function Section({
+export function Section ({
   as: Component = 'section',
   children,
   className,
@@ -94,7 +94,7 @@ export function Section({
   ...props
 }) {
   const paddings = {
-    x: 'px-6 md:px-8 lg:px-12',
+    x: 'px-10',
     y: 'py-6 md:py-8 lg:py-12',
     swimlane: 'pt-4 md:pt-8 lg:pt-12 md:pb-4 lg:pb-8',
     all: 'p-6 md:p-8 lg:p-12',
@@ -132,7 +132,7 @@ export function Section({
   );
 }
 
-export function PageHeader({
+export function PageHeader ({
   children,
   className,
   heading,
@@ -144,7 +144,7 @@ export function PageHeader({
     blogPost:
       'grid md:text-center w-full gap-4 p-6 py-8 md:p-8 lg:p-12 md:justify-items-center',
     allCollections:
-      'flex justify-between items-baseline gap-8 p-6 md:p-8 lg:p-12',
+      'flex justify-between items-baseline gap-8 p-6 md:p-8 lg:p-12 md:text-5xl text-3xl',
   };
 
   const styles = clsx(variants[variant], className);

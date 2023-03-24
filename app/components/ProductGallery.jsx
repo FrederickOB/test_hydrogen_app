@@ -1,11 +1,11 @@
-import {ATTR_LOADING_EAGER} from '~/lib/const';
-import {MediaFile} from '@shopify/hydrogen-react';
-import {useState} from 'react';
+import { ATTR_LOADING_EAGER } from '~/lib/const';
+import { MediaFile } from '@shopify/hydrogen-react';
+import { useState } from 'react';
 
 /**
  * A client component that defines a media gallery for hosting images, 3D models, and videos of products
  */
-export function ProductGallery({media, className}) {
+export function ProductGallery ({ media, className }) {
   if (!media.length) {
     return null;
   }
@@ -47,7 +47,7 @@ export function ProductGallery({media, className}) {
               };
               break;
             case 'EXTERNAL_VIDEO':
-              mediaProps = {width: '100%'};
+              mediaProps = { width: '100%' };
               break;
             case 'MODEL_3D':
               mediaProps = {
@@ -65,7 +65,7 @@ export function ProductGallery({media, className}) {
           }
 
           const style = [
-            ' snap-center card-image bg-white dark:bg-contrast/10 w-full cursor-pointer',
+            ' snap-center card-image bg-white /10 w-full cursor-pointer',
           ].join(' ');
 
           return (
@@ -85,9 +85,8 @@ export function ProductGallery({media, className}) {
             )} */}
               <MediaFile
                 tabIndex="0"
-                className={`w-full h-12 lg:h-28  fadeIn object-contain ${
-                  selectedImage.id === med.id ? 'border-2 border-white' : ''
-                }`}
+                className={`w-full h-12 lg:h-28  fadeIn object-contain ${selectedImage.id === med.id ? 'border-2 border-white' : ''
+                  }`}
                 data={data}
                 // sizes="(min-width: 64em) 30vw, (min-width: 48em) 25vw, 90vw"
                 // @ts-ignore
