@@ -44,7 +44,7 @@ export default function Index () {
   return (
     <div className="flex justify-center bg-[#133C4D] ">
       <div className="flex flex-col justify-between items-center py-20 h-full md:h-[90vh]  md:w-2/3">
-        <h1 className="md:text-6xl text-4xl font-bold font-Inter px-10 text-white">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
+        <h1 className="md:text-6xl text-4xl font-bold font-Inter px-10 text-center text-white">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
         <div className="flex flex-col items-center justify- py-10 md:py-20 w-full h-[80%] text-white">
           <div className="grid w-full grid-cols-1 gap-20 p-10 md:grid-cols-3">
             <div className="">
@@ -80,7 +80,7 @@ export default function Index () {
         <Button
           onClick={() => {
             return navigate(
-              `/products/query/tag:${tags.node}&product_type:${category.node}`,
+              `/products/query/tag:${tags.name}&product_type:${category.node}`,
             );
           }}
 

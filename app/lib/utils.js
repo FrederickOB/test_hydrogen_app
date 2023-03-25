@@ -261,7 +261,7 @@ export function useIsHomePath() {
   const strippedPathname = pathname.replace(selectedLocale.pathPrefix, '');
   return strippedPathname === '/';
 }
-console.log('globalThis', URL);
+// console.log('globalThis', URL);
 /**
  * Validates that a url is local
  * @param url

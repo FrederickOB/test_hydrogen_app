@@ -42,17 +42,17 @@ const Index = () => {
   const [products, setProducts] = useState(productsRes.nodes);
   return (
     <div className="relative px-10 w-screen  bg-[#133C4D]">
-      <div onClick={() => navigate(-1)} className="cursor-pointer text-white flex justify-start  absolute left-10 mt-10 space-x-4 "><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+      {products && products.length > 0 ? <div onClick={() => navigate(-1)} className="cursor-pointer text-white flex justify-start  absolute left-10 mt-10 space-x-4 "><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
       </svg>
         <Text className="text-white " >
           Back</Text>
-      </div>
+      </div> : null}
 
       <div className="flex justify-center ">
-        <div className="flex flex-col  items-center py-20 h-full lg:min-h-[90vh] w-full  md:w-2/3">
-          <h1 className="md:text-6xl text-4xl font-bold font-Inter  text-white">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
-          <div className="flex flex-col items-center space-y-8 w-full h-full pt-16 ">
+        <div className="flex flex-col  items-center py-20 max-h-full  min-h-screen lg:min-h-[90vh] w-full  md:w-2/3">
+          <h1 className="md:text-6xl text-4xl font-bold font-Inter text-center text-white">Let us help you pick the <span className="font-normal font-GiveYouGlory text-amber-300">Perfect</span> card </h1>
+          {products && products.length > 0 ? <div className="flex flex-col items-center space-y-8 w-full h-full pt-16 ">
             <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
               {products?.slice(0, 3).map((cardInfo, i) => (
                 <SuggestionsCard key={cardInfo.id} cardInfo={cardInfo} i={i} />
@@ -72,21 +72,34 @@ const Index = () => {
                 setProducts(shuffled);
               }}
             >Other Options</Button>
-          </div>
+          </div> : <div className="flex flex-col items-center space-y-20 w-full h-full pt-16 ">
+            <div className="">
+              <h1 className="text-center text-white text-lg">Sorry, we dont have any suggestions based on what you selected. You can view our wide range of cards available or go back and change your preferences</h1>
+            </div>
+            <div className="flex space-x-6"> <Button
+              size="w-1/3"
+              onClick={() => navigate(-1)}
+            >Back</Button>
+              <Button
+                size="w-1/3"
+                onClick={() => navigate('/products')}
+              >All Our Products</Button></div>
+
+          </div>}
         </div>
       </div>
-      <div
+      {products && products.length > 0 ? <div
         onClick={() => navigate('/products')}
         className="cursor-pointer flex absolute bottom-2 lg:bottom-10 right-10 space-x-4 bg-[#133C4D] py-2 justify-end text-white"
       >
         <Text className="text-white " >
           View All Our Cards</Text>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
         </svg>
 
-      </div>
-    </div>
+      </div> : null}
+    </div >
   );
 };
 
